@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"enigma/enigma"
 	"fmt"
+	"os"
+	"strings"
 )
 
 func main() {
@@ -14,13 +17,20 @@ func main() {
 		ReflectorType:  "B",
 	}
 
-	message := "HELLOWORLD"
+	fmt.Print("文字列を入力してください(英字のみ): ")
 
-	enigma1 := enigma.NewEnigmaFromKey(key)
-	cipher := enigma1.Encrypt(message)
-	fmt.Println("暗号文:", cipher)
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "エラー:", err)
+		return
+	}
 
-	enigma2 := enigma.NewEnigmaFromKey(key)
-	plain := enigma2.Encrypt(cipher)
-	fmt.Println("復号文:", plain)
+	input = strings.TrimSpace(input)
+	input = strings.ToUpper(input)
+
+	enigmaMachine := enigma.NewEnigmaFromKey(key)
+	cipher := enigmaMachine.Encrypt(input)
+
+	fmt.Println("結果:", cipher)
 }
