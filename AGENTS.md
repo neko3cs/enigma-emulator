@@ -17,6 +17,9 @@ go build ./...
 # Vet
 go vet ./...
 
+# Test
+go test ./...
+
 # Run (reads an alphabet-only string interactively from stdin, prints the Enigma-transformed result)
 go run .
 ```
