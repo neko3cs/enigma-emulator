@@ -32,4 +32,4 @@ go run .
 | Date | What went wrong | Prevention |
 | :--- | :--- | :--- |
 | 2026-08-27 | `Rotor.Step()` and `Enigma.EncryptChar()` checked the notch via `r.wiring[r.position]` instead of the position letter itself, deviating from real Enigma stepping (fixed in commit df38a83) | Compare rotor position directly against `notch` — see Tacit Knowledge |
-| 2026-08-27 | `Enigma.stepRotors()` skipped stepping the fast rotor entirely on double-step keystrokes, and checked the fast rotor's notch after stepping it (one keystroke too late) instead of before, deviating from real Enigma stepping (fixed in commit — see `git log`) | Fast rotor always steps once per keystroke; check notches before stepping — see Tacit Knowledge |
+| 2026-08-27 | `Enigma.stepRotors()` skipped stepping the fast rotor entirely on double-step keystrokes, and checked the fast rotor's notch after stepping it (one keystroke too late) instead of before, deviating from real Enigma stepping (fixed in commit 35dab1a) | Fast rotor always steps once per keystroke; check notches before stepping — see Tacit Knowledge |

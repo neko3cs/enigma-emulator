@@ -10,6 +10,7 @@ classDiagram
         -plugboard *Plugboard
         +NewEnigmaFromKey(key) Enigma
         +EncryptChar(c byte) byte
+        -stepRotors()
         +Encrypt(text string) string
     }
     class Rotor {
@@ -19,7 +20,8 @@ classDiagram
         -ringSetting int
         +Forward(c byte) byte
         +Backward(c byte) byte
-        +Step() bool
+        +AtNotch() bool
+        +Step()
     }
     class Reflector {
         -wiring string

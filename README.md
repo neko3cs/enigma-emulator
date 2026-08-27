@@ -56,6 +56,6 @@ type Rotor struct {
 ### Goの学習ポイントとして見ておきたい箇所
 
 - **構造体とポインタレシーバ**: `func (r *Rotor) Forward(c byte) byte` のように、構造体の状態を変更・参照するメソッドをポインタで定義するパターン（`rotor.go`）
-- **byte型での文字計算**: `int(c-'A')` のように、アルファベットを0〜25の数値として扱い、`% 26` で26文字の範囲に収める剰余演算（`rotor.go`, `machine.go`）
+- **byte型での文字計算**: アルファベットを0〜25の数値として扱う変換（`charToIndex`/`indexToChar`、`alphabet.go`）と、`% alphabetSize` で26文字の範囲に収める剰余演算（`rotor.go`）
 - **mapの利用**: `map[byte]byte` で単純な対応表を表現する例（`plugboard.go`）
 - **パッケージ分割とexport制御**: `main` パッケージと `enigma` パッケージを分け、大文字/小文字で公開範囲をコントロールする例（`src/main.go`, `src/enigma/`）
