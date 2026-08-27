@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Key References
-- `architecture.md` — always-on design policy (tech choices, layering, invariants)
+- `docs/architecture.md` — always-on design policy (tech choices, layering, invariants)
 - `PLAN.md` — in-progress work, if any
 
 ## Development Rules
