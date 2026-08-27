@@ -55,14 +55,12 @@ func (e *Enigma) EncryptChar(c byte) byte {
 func (e *Enigma) stepRotors() {
 	fast, middle, slow := e.rotors[0], e.rotors[1], e.rotors[2]
 	if middle.AtNotch() {
-		middle.Step()
 		slow.Step()
-	} else {
-		fast.Step()
-		if fast.AtNotch() {
-			middle.Step()
-		}
+		middle.Step()
+	} else if fast.AtNotch() {
+		middle.Step()
 	}
+	fast.Step()
 }
 
 func (e *Enigma) Encrypt(text string) string {
