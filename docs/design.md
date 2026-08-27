@@ -46,6 +46,8 @@ sequenceDiagram
     participant Ref as Reflector
     participant PB as Plugboard
 
+    Main->>Main: loadKey(configPath) で config.json から EnigmaKey を読み込む
+    Main->>E: NewEnigmaFromKey(key)
     Main->>E: Encrypt(text)
     loop 1文字ごと
         E->>Rot: ノッチ判定してステップ（回転）
