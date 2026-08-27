@@ -1,7 +1,16 @@
 # PLAN.md
 
 ## Next
-- Verify `rotors[0]` (rightmost/fast rotor) stepping behavior in `machine.go:EncryptChar` against known Enigma test vectors, then file a GitHub Issue if confirmed as a bug.
+- File a GitHub Issue for the confirmed `rotors[0]` stepping bug once the user decides to (see Undecided). No other work in progress.
 
 ## Undecided
-- Whether `rotors[0]` should step unconditionally on every keystroke (real Enigma behavior), independent of the `rotors[1]` notch branch. Currently `rotors[0].Step()` only runs in the `else` branch of the notch check in `machine.go`, so a keystroke that triggers the `rotors[1]`-notch branch skips advancing `rotors[0]`. Not yet confirmed as a bug — file a GitHub Issue once verified.
+- Confirmed as a real bug (see Approach below): whether/when to file a GitHub Issue and fix it. User has twice declined to file the issue for now ("今は立てない" / "GitHub Issueは立てないって言いましたよね").
+
+## Approach
+- Verified `rotors[0]` (fast rotor) stepping in `machine.go:stepRotors()` against the standard Enigma double-stepping algorithm by simulating both side by side (position sequence for 700 keystrokes, rotors III/II/I from AAA). Two confirmed deviations:
+  1. `stepRotors()` never calls `fast.Step()` in the `middle.AtNotch()` branch, so the fast rotor doesn't advance on double-step keystrokes (real Enigma: fast rotor always steps, unconditionally, every keystroke).
+  2. The fast-rotor notch check happens after stepping it, so the middle rotor advances one keystroke earlier than the standard algorithm (which checks the notch on the pre-step position).
+- Not fixed yet — this was investigation only, scoped separately from the "design cleanup" refactor in commit `817d024` (which intentionally preserved this behavior).
+
+## Rejected
+- Filing the GitHub Issue immediately after confirming the bug — user corrected this; the earlier "not now" decision on filing still stands and needs fresh confirmation before creating one.
