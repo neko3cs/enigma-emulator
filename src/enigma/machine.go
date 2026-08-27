@@ -12,7 +12,7 @@ func NewEnigmaFromKey(key EnigmaKey) *Enigma {
 	rotors := make([]*Rotor, 3)
 	for i, name := range key.RotorOrder {
 		wiring, notch := getRotorSpec(name)
-		pos := int(key.RotorPositions[i] - 'A')
+		pos := charToIndex(key.RotorPositions[i])
 		ring := key.RingSettings[i] - 1
 		rotors[i] = &Rotor{
 			wiring:      wiring,
@@ -33,13 +33,7 @@ func (e *Enigma) EncryptChar(c byte) byte {
 		return c
 	}
 
-	// ステップ（ローター回転）
-	if byte(e.rotors[1].position)+'A' == e.rotors[1].notch {
-		e.rotors[1].Step()
-		e.rotors[2].Step()
-	} else if e.rotors[0].Step() {
-		e.rotors[1].Step()
-	}
+	e.stepRotors()
 
 	c = e.plugboard.Swap(c)
 
@@ -56,6 +50,19 @@ func (e *Enigma) EncryptChar(c byte) byte {
 	c = e.plugboard.Swap(c)
 
 	return c
+}
+
+func (e *Enigma) stepRotors() {
+	fast, middle, slow := e.rotors[0], e.rotors[1], e.rotors[2]
+	if middle.AtNotch() {
+		middle.Step()
+		slow.Step()
+	} else {
+		fast.Step()
+		if fast.AtNotch() {
+			middle.Step()
+		}
+	}
 }
 
 func (e *Enigma) Encrypt(text string) string {

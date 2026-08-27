@@ -10,22 +10,25 @@ type Rotor struct {
 }
 
 func (r *Rotor) Forward(c byte) byte {
-	index := (int(c-'A') + r.position - r.ringSetting + 26) % 26
+	index := (charToIndex(c) + r.position - r.ringSetting + alphabetSize) % alphabetSize
 	wiredChar := r.wiring[index]
-	output := (int(wiredChar-'A') - r.position + r.ringSetting + 26) % 26
-	return byte(output) + 'A'
+	output := (charToIndex(wiredChar) - r.position + r.ringSetting + alphabetSize) % alphabetSize
+	return indexToChar(output)
 }
 
 func (r *Rotor) Backward(c byte) byte {
-	index := (int(c-'A') + r.position - r.ringSetting + 26) % 26
-	wiredIndex := strings.IndexByte(r.wiring, byte(index)+'A')
-	output := (wiredIndex - r.position + r.ringSetting + 26) % 26
-	return byte(output) + 'A'
+	index := (charToIndex(c) + r.position - r.ringSetting + alphabetSize) % alphabetSize
+	wiredIndex := strings.IndexByte(r.wiring, indexToChar(index))
+	output := (wiredIndex - r.position + r.ringSetting + alphabetSize) % alphabetSize
+	return indexToChar(output)
 }
 
-func (r *Rotor) Step() bool {
-	r.position = (r.position + 1) % 26
-	return r.notch == byte(r.position)+'A'
+func (r *Rotor) AtNotch() bool {
+	return indexToChar(r.position) == r.notch
+}
+
+func (r *Rotor) Step() {
+	r.position = (r.position + 1) % alphabetSize
 }
 
 func getRotorSpec(name string) (string, byte) {

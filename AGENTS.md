@@ -22,7 +22,7 @@ go run .
 ```
 
 ## Tacit Knowledge
-- Rotor notch detection must compare the rotor's position directly against `notch` (`byte(position)+'A' == notch`), never through `wiring`. The notch is the mechanical stepping mechanism; `wiring` is the electrical letter-substitution table. Conflating the two silently breaks the double-stepping behavior with no compile/runtime error.
+- Rotor notch detection (`Rotor.AtNotch()`) must compare the rotor's position directly against `notch`, never through `wiring`. The notch is the mechanical stepping mechanism; `wiring` is the electrical letter-substitution table. Conflating the two silently breaks the double-stepping behavior with no compile/runtime error.
 
 ## Incidents
 | Date | What went wrong | Prevention |

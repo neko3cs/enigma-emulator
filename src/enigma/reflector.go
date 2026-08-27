@@ -5,8 +5,7 @@ type Reflector struct {
 }
 
 func (r *Reflector) Reflect(c byte) byte {
-	index := c - 'A'
-	return r.wiring[index]
+	return r.wiring[charToIndex(c)]
 }
 
 func getReflector(name string) *Reflector {
