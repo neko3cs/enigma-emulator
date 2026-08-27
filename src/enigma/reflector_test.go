@@ -2,8 +2,11 @@ package enigma
 
 import "testing"
 
-// リフレクターの配線は「対合（involution）」でなければならない。
-// つまり2回反射すると元の文字に戻る、かつ自分自身には反射しない。
+// TestReflectorIsInvolution は、実機のリフレクターが満たすべき配線上の
+// 性質を確認する。
+//
+// 観点: リフレクターの配線が「対合（involution）」になっていること。
+// つまり2回反射すると元の文字に戻ること、かつ自分自身には反射しないこと。
 func TestReflectorIsInvolution(t *testing.T) {
 	for _, name := range []string{"B", "C"} {
 		r := getReflector(name)
@@ -19,6 +22,9 @@ func TestReflectorIsInvolution(t *testing.T) {
 	}
 }
 
+// TestGetReflectorInvalidNamePanics は不正な入力に対する挙動を確認する。
+//
+// 観点: 未知のリフレクター名を渡した場合に panic すること。
 func TestGetReflectorInvalidNamePanics(t *testing.T) {
 	defer func() {
 		if recover() == nil {

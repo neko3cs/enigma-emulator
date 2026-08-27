@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+// main は標準入力から1行読み取り、ハードコードされた鍵でエニグマ変換
+// （対称性により暗号化にも復号にも使える）した結果を表示する。
 func main() {
 	key := enigma.EnigmaKey{
 		RotorOrder:     []string{"III", "II", "I"},

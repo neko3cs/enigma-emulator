@@ -2,9 +2,12 @@ package enigma
 
 import "testing"
 
-// 標準的なエニグマのダブルステッピング挙動を回帰させないための固定シーケンステスト。
-// rotors III(fast)/II(middle)/I(slow), 位置AAAから100回ステップさせた結果は
-// 既知の正しいアルゴリズムでシミュレートした WEA と一致するはずである。
+// TestStepRotorsDoubleStepping は、標準的なエニグマのダブルステッピング
+// 挙動を固定シーケンスで回帰的に確認する。
+//
+// 観点: rotors III(fast)/II(middle)/I(slow)、位置AAAから100回ステップ
+// させた結果のローター位置が、既知の正しいアルゴリズムでシミュレートした
+// 結果（WEA）と一致すること。
 func TestStepRotorsDoubleStepping(t *testing.T) {
 	e := NewEnigmaFromKey(EnigmaKey{
 		RotorOrder:     []string{"III", "II", "I"},
@@ -29,8 +32,12 @@ func TestStepRotorsDoubleStepping(t *testing.T) {
 	}
 }
 
-// 右（高速）ローターは、中央ローターが自身のノッチにある打鍵（ダブルステップ）でも
-// 必ず回転しなければならない。過去にここが抜けていた（AGENTS.md Incidents参照）。
+// TestFastRotorAlwaysSteps は、右ローターの回転が省略されないことを
+// 確認する回帰テスト。
+//
+// 観点: 中央ローターが自身のノッチにある打鍵（ダブルステップ）でも、
+// 右（高速）ローターが必ず回転すること。過去にここが抜けていたバグの
+// 再発防止（AGENTS.md の Incidents 参照）。
 func TestFastRotorAlwaysSteps(t *testing.T) {
 	fast := &Rotor{notch: 'V', position: charToIndex('U')}
 	middle := &Rotor{notch: 'E', position: charToIndex('E')} // 自身のノッチにいる

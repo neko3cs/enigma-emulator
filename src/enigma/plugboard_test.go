@@ -2,6 +2,10 @@ package enigma
 
 import "testing"
 
+// TestPlugboardSwap は Swap の交換ロジックを確認する。
+//
+// 観点: 設定したペアが双方向に正しく交換されること、
+// 設定されていない文字はそのまま返ること。
 func TestPlugboardSwap(t *testing.T) {
 	pb := NewPlugboard([]string{"AQ", "EP"})
 
