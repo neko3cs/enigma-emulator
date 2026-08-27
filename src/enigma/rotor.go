@@ -25,7 +25,7 @@ func (r *Rotor) Backward(c byte) byte {
 
 func (r *Rotor) Step() bool {
 	r.position = (r.position + 1) % 26
-	return r.notch == r.wiring[r.position]
+	return r.notch == byte(r.position)+'A'
 }
 
 func getRotorSpec(name string) (string, byte) {

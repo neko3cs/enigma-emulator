@@ -34,7 +34,7 @@ func (e *Enigma) EncryptChar(c byte) byte {
 	}
 
 	// ステップ（ローター回転）
-	if e.rotors[1].wiring[e.rotors[1].position] == e.rotors[1].notch {
+	if byte(e.rotors[1].position)+'A' == e.rotors[1].notch {
 		e.rotors[1].Step()
 		e.rotors[2].Step()
 	} else if e.rotors[0].Step() {
