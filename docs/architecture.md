@@ -4,7 +4,8 @@
 
 ```mermaid
 flowchart LR
-    stdin[標準入力] --> main[main package]
+    config[config.json] --> main[main package]
+    stdin[標準入力] --> main
     main -->|EnigmaKey| enigma[enigma package]
     enigma -->|変換結果| main
     main --> stdout[標準出力]
@@ -21,8 +22,9 @@ flowchart LR
 
 ## レイヤー構成と依存の方向
 
-- `main` → `enigma` の一方向依存。`main` パッケージは標準ライブラリの `bufio`, `fmt`, `os`, `strings` を、`enigma` パッケージは `strings` のみを使用する。両パッケージとも外部モジュールへの依存はゼロ（`go.mod` より）。
+- `main` → `enigma` の一方向依存。`main` パッケージは標準ライブラリの `bufio`, `encoding/json`, `fmt`, `os`, `strings` を、`enigma` パッケージは `strings` のみを使用する。両パッケージとも外部モジュールへの依存はゼロ（`go.mod` より）。
 - `main` は `enigma` の公開API（`EnigmaKey`, `NewEnigmaFromKey`, `Encrypt`）のみを利用する。`Rotor` / `Reflector` / `Plugboard` の内部フィールドはすべて非公開で、`enigma` パッケージ外から直接触れない。
+- 鍵の生成方法（JSON設定ファイルを読む `loadKey`）と、鍵を使ってエニグマ機を組み立てる処理（`enigma.NewEnigmaFromKey`）は分離している。`enigma` パッケージは `EnigmaKey` という値を受け取るだけで、それがどこから来たか（ファイルか、テストコードのリテラルか）を知らない（依存性の注入）。
 
 ## 不変条件・境界
 

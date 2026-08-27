@@ -1,0 +1,7 @@
+{
+    "rotorOrder": ["III", "II", "I"],
+    "rotorPositions": "ABC",
+    "ringSettings": [1, 1, 1],
+    "plugboardPairs": ["AQ", "EP", "TY"],
+    "reflectorType": "B"
+}

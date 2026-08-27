@@ -53,9 +53,32 @@ type Rotor struct {
 - **③・⑤（ローター通過）**: `wiring` という26文字の文字列が変換表になっており、「何番目の文字か」を数値（インデックス）に変換して `wiring` を引く、という処理を `position`（現在の回転位置）と `ringSetting`（リングのずれ）を考慮しながら行います。`Forward` が行きの変換、`Backward` がその逆変換です。
 - **①（ステップ）**: ローターは1文字処理するたびに回転します。さらに、あるローターが特定の位置（`notch`）まで回転すると、隣のローターも巻き込んで回転する「ダブルステッピング」という実機特有の癖を再現しています。
 
+### 鍵はJSON設定ファイルから読み込む（依存性の注入）
+
+鍵（`EnigmaKey`）はソースコードに埋め込まず、`src/config.json` というJSON設定ファイルから読み込みます。
+
+```go
+// config.go
+func loadKey(path string) (enigma.EnigmaKey, error) {
+    data, err := os.ReadFile(path)
+    ...
+    var key enigma.EnigmaKey
+    json.Unmarshal(data, &key)
+    return key, nil
+}
+
+// main.go
+key, err := loadKey(configPath)
+enigmaMachine := enigma.NewEnigmaFromKey(key)
+```
+
+ポイントは、`enigma` パッケージ（`NewEnigmaFromKey`）は「`EnigmaKey` という値を受け取る」ことしか知らず、その値がJSONファイルから来たのか、テストコードのリテラルから来たのかを一切気にしないという点です。設定の読み込み（`main`側の関心事）と、その設定を使った処理（`enigma`側の関心事）が分離されており、外側（`main`）が組み立てた依存object（`EnigmaKey`）を内側（`enigma`）に**注入**しています。これが「依存性の注入（DI: Dependency Injection）」の基本的な考え方です。
+
 ### Goの学習ポイントとして見ておきたい箇所
 
 - **構造体とポインタレシーバ**: `func (r *Rotor) Forward(c byte) byte` のように、構造体の状態を変更・参照するメソッドをポインタで定義するパターン（`rotor.go`）
 - **byte型での文字計算**: アルファベットを0〜25の数値として扱う変換（`charToIndex`/`indexToChar`、`alphabet.go`）と、`% alphabetSize` で26文字の範囲に収める剰余演算（`rotor.go`）
 - **mapの利用**: `map[byte]byte` で単純な対応表を表現する例（`plugboard.go`）
 - **パッケージ分割とexport制御**: `main` パッケージと `enigma` パッケージを分け、大文字/小文字で公開範囲をコントロールする例（`src/main.go`, `src/enigma/`）
+- **JSONのデコードとstructタグ**: `encoding/json` と `json:"rotorOrder"` のようなstructタグで、JSONのキー名とGoのフィールド名を対応付ける例（`key.go`, `config.go`）
+- **依存性の注入（DI）**: 設定の読み込み元（ファイル）と、それを使う側（`enigma` パッケージ）を分離し、値を外から渡す構成（`config.go`, `main.go`）
